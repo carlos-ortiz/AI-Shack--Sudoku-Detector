@@ -1,4 +1,10 @@
-#include "stdafx.h"
+//#include "stdafx.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
+
 #include "digitrecognizer.h"
 
 DigitRecognizer::DigitRecognizer()
@@ -124,13 +130,13 @@ int DigitRecognizer::classify(cv::Mat img)
 int DigitRecognizer::readFlippedInteger(FILE *fp)
 {
 	int ret = 0;
-	BYTE *temp;
+	unsigned char *temp;
 
-	temp = (BYTE*)(&ret);
-	fread(&temp[3], sizeof(BYTE), 1, fp);
-	fread(&temp[2], sizeof(BYTE), 1, fp);
-	fread(&temp[1], sizeof(BYTE), 1, fp);
-	fread(&temp[0], sizeof(BYTE), 1, fp);
+	temp = (unsigned char*)(&ret);
+	fread(&temp[3], sizeof(unsigned char), 1, fp);
+	fread(&temp[2], sizeof(unsigned char), 1, fp);
+	fread(&temp[1], sizeof(unsigned char), 1, fp);
+	fread(&temp[0], sizeof(unsigned char), 1, fp);
 
 	return ret;
 }
@@ -168,12 +174,12 @@ bool DigitRecognizer::train(char *trainPath, char *labelsPath)
 
 	memset(trainingClasses->data.ptr, 0, sizeof(float)*numImages);
 
-	BYTE *temp = new BYTE[size];
-	BYTE tempClass=0;
+	unsigned char *temp = new unsigned char[size];
+	unsigned char tempClass=0;
 	for(int i=0;i<numImages;i++)
 	{
 		fread((void*)temp, size, 1, fp);
-		fread((void*)(&tempClass), sizeof(BYTE), 1, fp2);
+		fread((void*)(&tempClass), sizeof(unsigned char), 1, fp2);
 
 		trainingClasses->data.fl[i] = tempClass;
 

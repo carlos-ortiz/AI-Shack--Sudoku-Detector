@@ -1,10 +1,15 @@
 // Sudoku Solver.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
 
-#include <cv.h>
-#include <highgui.h>
+//#include <cv.h>
+//#include <highgui.h>
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
 
 #include "digitrecognizer.h"
 
@@ -38,10 +43,10 @@ void drawLine(Vec4i line, Mat &img)
 	cv::line(img, Point(line[0], line[1]), Point(line[2], line[3]), CV_RGB(255,0,255));
 }
 
-void mergeRelatedLines(vector<Vec2f> *lines, Mat &img)
+void mergeRelatedLines(std::vector<Vec2f> *lines, Mat &img)
 {
-	vector<Vec2f>::iterator current;
-	vector<Vec4i> points(lines->size());
+	std::vector<Vec2f>::iterator current;
+	std::vector<Vec4i> points(lines->size());
 	for(current=lines->begin();current!=lines->end();current++)
 	{
 		if((*current)[0]==0 && (*current)[1]==-100)
@@ -68,7 +73,7 @@ void mergeRelatedLines(vector<Vec2f> *lines, Mat &img)
 			pt2current.x=-pt2current.y/tan(theta1) + p1/cos(theta1);
 		}
 
-		vector<Vec2f>::iterator	pos;
+		std::vector<Vec2f>::iterator	pos;
 		for(pos=lines->begin();pos!=lines->end();pos++)
 		{
 			if(*current==*pos)
@@ -177,7 +182,7 @@ CvRect findBB(Mat imgSrc)
 
 int main()
 {
-	Mat sudoku = imread("sudoku.jpg",0);
+	Mat sudoku = imread("data/sudoku.jpg",0);
 
 	//Mat sudoku;
 	//pyrDown(imread("sudoku3.jpg", 0), sudoku);
@@ -249,7 +254,7 @@ int main()
 
 	//imshow("thresholded", outerBox);
 
-	vector<Vec2f> lines;
+	std::vector<Vec2f> lines;
 	HoughLines(outerBox, lines, 1, CV_PI/180, 200);
 
 	//vector<Vec2f>::iterator pos;
