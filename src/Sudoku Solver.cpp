@@ -1,15 +1,12 @@
 // Sudoku Solver.cpp : Defines the entry point for the console application.
 //
 
-//#include "stdafx.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 #include <vector>
 
-//#include <cv.h>
-//#include <highgui.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/legacy.hpp>
 
 #include "digitrecognizer.h"
 
@@ -242,9 +239,9 @@ int main()
 		uchar *row = outerBox.ptr(y);
 		for(int x=0;x<outerBox.size().width;x++)
 		{
-			if(row[x]==64 && x!=maxPt.x && y!=maxPt.y)
+			if((unsigned)row[x]==64 && x!=maxPt.x && y!=maxPt.y)
 			{
-				int area = floodFill(outerBox, Point(x,y), CV_RGB(0,0,0));
+//				int area = floodFill(outerBox, Point(x,y), CV_RGB(0,0,0));
 			}
 		}
 		//printf("Current row: %d\n", y);
@@ -260,20 +257,20 @@ int main()
 	//vector<Vec2f>::iterator pos;
 	mergeRelatedLines(&lines, sudoku);
 
-	printf("Size of lines: %d\n", lines.size());
-	for(int i=0;i<lines.size();i++)
+	printf("Size of lines: %i\n", (int)lines.size());
+	for(unsigned i=0;i<lines.size();i++)
 	{
 		drawLine(lines[i], outerBox, CV_RGB(0,0,128));
 	}
 
-	imshow("thresholded", outerBox);
+//	imshow("thresholded", outerBox);
 
 	// Now detect the lines on extremes
 	Vec2f topEdge = Vec2f(1000,1000);	double topYIntercept=100000, topXIntercept=0;
 	Vec2f bottomEdge = Vec2f(-1000,-1000);		double bottomYIntercept=0, bottomXIntercept=0;
 	Vec2f leftEdge = Vec2f(1000,1000);	double leftXIntercept=100000, leftYIntercept=0;
 	Vec2f rightEdge = Vec2f(-1000,-1000);		double rightXIntercept=0, rightYIntercept=0;
-	for(int i=0;i<lines.size();i++)
+	for(unsigned i=0;i<lines.size();i++)
 	{
 		Vec2f current = lines[i];
 
@@ -424,8 +421,8 @@ int main()
 STOP_TIMING(sudTimer);
 
 	printf("Time taken: %f\n", GET_TIMING(sudTimer));
-	imshow("Lines", outerBox);
-	imshow("SuDoKu", sudoku);
+//	imshow("Lines", outerBox);
+//	imshow("SuDoKu", sudoku);
 
 	Mat undistortedThreshed = undistorted.clone();
 
@@ -433,11 +430,11 @@ STOP_TIMING(sudTimer);
 	//threshold(undistorted, undistortedThreshed, 128, 255, CV_THRESH_BINARY_INV);
 	adaptiveThreshold(undistorted, undistortedThreshed, 255, CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY_INV, 101, 1);
 
-	imshow("undistorted", undistortedThreshed);
-	waitKey(0);
+//	imshow("undistorted", undistortedThreshed);
+//	waitKey(0);
 
 	DigitRecognizer *dr = new DigitRecognizer();
-	bool b = dr->train("D:/Test/Character Recognition/train-images.idx3-ubyte", "D:/Test/Character Recognition/train-labels.idx1-ubyte");
+	bool b = dr->train("data/train-images-idx3-ubyte", "data/train-labels-idx1-ubyte");
 	printf("Trained: %d\n", b);
 
 	int dist = ceil((double)maxLength/9);
@@ -501,7 +498,7 @@ STOP_TIMING(sudTimer);
 		printf("\n");
 	}
 
-	waitKey(0);
+//	waitKey(0);
 
 	return 0;
 }
